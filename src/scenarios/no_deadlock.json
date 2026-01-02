@@ -1,0 +1,56 @@
+{
+  "scenario_name": "Safe System - No Deadlock",
+  "description": "System with sufficient resources to avoid deadlock",
+  "detection_strategy": "periodic",
+  "detection_interval": 1.0,
+  "recovery_strategy": "cost",
+  "processes": [
+    {
+      "pid": "P1",
+      "priority": 5,
+      "execution_time": 100
+    },
+    {
+      "pid": "P2",
+      "priority": 5,
+      "execution_time": 100
+    },
+    {
+      "pid": "P3",
+      "priority": 6,
+      "execution_time": 120
+    }
+  ],
+  "resources": [
+    {
+      "rid": "R1",
+      "instances": 2,
+      "type": "CPU"
+    },
+    {
+      "rid": "R2",
+      "instances": 2,
+      "type": "Memory"
+    }
+  ],
+  "initial_allocations": [
+    {
+      "process": "P1",
+      "resource": "R1"
+    }
+  ],
+  "resource_requests": [
+    {
+      "process": "P2",
+      "resource": "R1"
+    },
+    {
+      "process": "P1",
+      "resource": "R2"
+    },
+    {
+      "process": "P2",
+      "resource": "R2"
+    }
+  ]
+}

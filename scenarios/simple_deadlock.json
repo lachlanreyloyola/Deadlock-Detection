@@ -1,0 +1,50 @@
+{
+  "scenario_name": "Simple Two-Process Deadlock",
+  "detection_strategy": "periodic",
+  "detection_interval": 1.0,
+  "recovery_strategy": "cost",
+  "processes": [
+    {
+      "pid": "P1",
+      "priority": 5,
+      "execution_time": 100
+    },
+    {
+      "pid": "P2",
+      "priority": 5,
+      "execution_time": 100
+    }
+  ],
+  "resources": [
+    {
+      "rid": "R1",
+      "instances": 1,
+      "type": "CPU"
+    },
+    {
+      "rid": "R2",
+      "instances": 1,
+      "type": "Memory"
+    }
+  ],
+  "initial_allocations": [
+    {
+      "process": "P1",
+      "resource": "R1"
+    },
+    {
+      "process": "P2",
+      "resource": "R2"
+    }
+  ],
+  "resource_requests": [
+    {
+      "process": "P1",
+      "resource": "R2"
+    },
+    {
+      "process": "P2",
+      "resource": "R1"
+    }
+  ]
+}
