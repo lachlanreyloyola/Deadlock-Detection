@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deadlock Detection System | Capstone</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -26,89 +27,97 @@
 
         <main class="dashboard-grid">
             
-            <section class="panel control-panel">
+            <div class="grid-column">
+                <section class="panel control-panel">
+                    <div class="panel-header">
+                        <h3>// SIMULATION CONTROL</h3>
+                    </div>
+                    <div class="control-group">
+                        <button id="createSimBtn" class="btn btn-primary">
+                            <span class="icon">⚡</span> INITIALIZE SIMULATION
+                        </button>
+                        <div class="sim-id-display" id="simIdDisplay">NO ACTIVE SIMULATION</div>
+                        <div class="button-row">
+                            <button id="runSimBtn" class="btn btn-action" disabled>RUN DETECTION</button>
+                            <button id="resetBtn" class="btn btn-danger" disabled>RESET SYSTEM</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel process-panel">
+                    <div class="panel-header">
+                        <h3>// ACTIVE PROCESSES</h3>
+                        <span class="count-badge" id="procCount">0</span>
+                    </div>
+                    <div class="input-row">
+                        <input type="text" id="pidInput" placeholder="PID (e.g., P1)" class="cyber-input">
+                        <input type="number" id="priorityInput" placeholder="PRIO" min="1" max="10" value="5" class="cyber-input short">
+                        <button id="addProcessBtn" class="btn btn-icon" disabled>+</button>
+                    </div>
+                    <div class="scroll-list" id="processList"></div>
+                </section>
+
+                <section class="panel resource-panel">
+                    <div class="panel-header">
+                        <h3>// SYSTEM RESOURCES</h3>
+                        <span class="count-badge" id="resCount">0</span>
+                    </div>
+                    <div class="input-row">
+                        <input type="text" id="ridInput" placeholder="RID (e.g., R1)" class="cyber-input">
+                        <input type="number" id="instancesInput" placeholder="QTY" min="1" value="1" class="cyber-input short">
+                        <button id="addResourceBtn" class="btn btn-icon" disabled>+</button>
+                    </div>
+                    <div class="scroll-list" id="resourceList"></div>
+                </section>
+            </div>
+
+            <section class="panel graph-panel">
                 <div class="panel-header">
-                    <h3>// SIMULATION CONTROL</h3>
-                </div>
-                <div class="control-group">
-                    <button id="createSimBtn" class="btn btn-primary">
-                        <span class="icon">⚡</span> INITIALIZE SIMULATION
-                    </button>
-                    <div class="sim-id-display" id="simIdDisplay">NO ACTIVE SIMULATION</div>
-                    <div class="button-row">
-                        <button id="runSimBtn" class="btn btn-action" disabled>RUN DETECTION</button>
-                        <button id="resetBtn" class="btn btn-danger" disabled>RESET SYSTEM</button>
+                    <h3>// RESOURCE ALLOCATION GRAPH (WFG)</h3>
+                    <div class="graph-legend">
+                        <span class="legend-item"><span class="dot p-dot"></span> Process</span>
+                        <span class="legend-item"><span class="dot r-dot"></span> Resource</span>
                     </div>
                 </div>
+                <div id="cy" class="graph-canvas"></div>
             </section>
 
-            <section class="panel process-panel">
-                <div class="panel-header">
-                    <h3>// ACTIVE PROCESSES</h3>
-                    <span class="count-badge" id="procCount">0</span>
-                </div>
-                <div class="input-row">
-                    <input type="text" id="pidInput" placeholder="PID (e.g., P1)" class="cyber-input">
-                    <input type="number" id="priorityInput" placeholder="PRIO" min="1" max="10" value="5" class="cyber-input short">
-                    <button id="addProcessBtn" class="btn btn-icon" disabled>+</button>
-                </div>
-                <div class="scroll-list" id="processList">
+            <div class="grid-column">
+                <section class="panel terminal-panel">
+                    <div class="panel-header">
+                        <h3>// EVENT LOG & REQUESTS</h3>
                     </div>
-            </section>
+                    <div class="terminal-window" id="requestLog">
+                        <div class="log-line system">System ready. Initialize simulation to begin...</div>
+                    </div>
+                    <div class="terminal-input-area">
+                        <span class="prompt">></span>
+                        <input type="text" id="reqPidInput" placeholder="PROCESS_ID" class="terminal-input">
+                        <span class="connector">REQUESTS</span>
+                        <input type="text" id="reqRidInput" placeholder="RESOURCE_ID" class="terminal-input">
+                        <button id="requestBtn" class="btn btn-small" disabled>EXECUTE</button>
+                    </div>
+                </section>
 
-            <section class="panel resource-panel">
-                <div class="panel-header">
-                    <h3>// SYSTEM RESOURCES</h3>
-                    <span class="count-badge" id="resCount">0</span>
-                </div>
-                <div class="input-row">
-                    <input type="text" id="ridInput" placeholder="RID (e.g., R1)" class="cyber-input">
-                    <input type="number" id="instancesInput" placeholder="QTY" min="1" value="1" class="cyber-input short">
-                    <button id="addResourceBtn" class="btn btn-icon" disabled>+</button>
-                </div>
-                <div class="scroll-list" id="resourceList">
+                <section class="panel metrics-panel">
+                    <div class="panel-header">
+                        <h3>// METRICS</h3>
                     </div>
-            </section>
-
-            <section class="panel terminal-panel">
-                <div class="panel-header">
-                    <h3>// EVENT LOG & REQUESTS</h3>
-                </div>
-                <div class="terminal-window" id="requestLog">
-                    <div class="log-line system">System ready. Initialize simulation to begin...</div>
-                </div>
-                <div class="terminal-input-area">
-                    <span class="prompt">></span>
-                    <input type="text" id="reqPidInput" placeholder="PROCESS_ID" class="terminal-input">
-                    <span class="connector">REQUESTS</span>
-                    <input type="text" id="reqRidInput" placeholder="RESOURCE_ID" class="terminal-input">
-                    <button id="requestBtn" class="btn btn-small" disabled>EXECUTE</button>
-                </div>
-            </section>
-
-            <section class="panel metrics-panel">
-                <div class="panel-header">
-                    <h3>// METRICS</h3>
-                </div>
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <span class="metric-label">ITERATIONS</span>
-                        <span class="metric-value" id="iterValue">0</span>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-label">ITERATIONS</span>
+                            <span class="metric-value" id="iterValue">0</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">LAST ACTION</span>
+                            <span class="metric-value small" id="lastActionValue">--</span>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <span class="metric-label">LAST ACTION</span>
-                        <span class="metric-value small" id="lastActionValue">--</span>
-                    </div>
-                    <div class="metric-card">
-                        <span class="metric-label">DETECTION MODE</span>
-                        <span class="metric-value highlight">PERIODIC</span>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
         </main>
     </div>
-
     <script src="/static/js/app.js"></script>
 </body>
 </html>
