@@ -154,4 +154,8 @@ h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
 .metric-value { font-family: var(--font-code); font-size: 1.2rem; font-weight: bold; display: block; }
 .metric-label { font-size: 0.65rem; color: #666; }
 
+<<<<<<< HEAD
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+=======
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+>>>>>>> 31c0d767693c28dbcee7f20d9375c07cd129be91
