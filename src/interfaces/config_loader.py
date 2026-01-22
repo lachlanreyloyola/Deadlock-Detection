@@ -1,6 +1,5 @@
-"""
-Configuration file loader for JSON/YAML scenarios
-"""
+#Configuration file loader for JSON/YAML scenarios
+
 import json
 import yaml
 import logging
@@ -11,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_scenario(filename: str, config: SimulationConfig = None) -> SimulationController:
-    """Load scenario from JSON or YAML file"""
+    #Load scenario from JSON or YAML file
     filepath = Path(filename)
     
     if not filepath.exists():
@@ -70,7 +69,7 @@ def load_scenario(filename: str, config: SimulationConfig = None) -> SimulationC
 
 
 def create_example_scenarios():
-    """Create example scenario files"""
+    #Create example scenario files
     scenarios_dir = Path('scenarios')
     scenarios_dir.mkdir(exist_ok=True)
     

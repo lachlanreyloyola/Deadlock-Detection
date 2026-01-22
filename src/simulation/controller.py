@@ -1,6 +1,5 @@
-"""
-Main simulation orchestration engine
-"""
+#Main simulation orchestration engine
+
 from typing import Dict, Optional
 from dataclasses import dataclass
 import time
@@ -16,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class DetectionStrategy(Enum):
-    """Detection triggering strategies"""
+    #Detection triggering strategies
     IMMEDIATE = "immediate"
     PERIODIC = "periodic"
     CPU_TRIGGERED = "cpu_triggered"
@@ -24,17 +23,17 @@ class DetectionStrategy(Enum):
 
 @dataclass
 class SimulationConfig:
-    """Simulation configuration"""
+    #Simulation configuration
     detection_strategy: str = "periodic"
-    detection_interval: float = 1.0  # seconds
+    detection_interval: float = 1.0  #seconds
     recovery_strategy: str = "cost"
-    cpu_threshold: float = 20.0  # percent
+    cpu_threshold: float = 20.0  #percent
     max_iterations: int = 100
 
 
 @dataclass
 class SimulationMetrics:
-    """Simulation performance metrics"""
+    #Simulation performance metrics
     total_detections: int = 0
     deadlocks_found: int = 0
     total_recovery_time: float = 0.0
@@ -60,22 +59,21 @@ class SimulationMetrics:
 
 
 class SimulationController:
-    """
-    Main simulation orchestration engine
-    """
+    #Main simulation orchestration engine
+    
     
     def __init__(self, config: SimulationConfig = None):
-        """Initialize simulation controller"""
+        #Initialize simulation controller
         self.config = config or SimulationConfig()
         
-        # Core components
+        #Core components
         self.processes: Dict[str, Process] = {}
         self.resources: Dict[str, Resource] = {}
         self.system_state = SystemState()
         self.detector = DeadlockDetector()
         self.recovery = RecoveryModule(strategy=self.config.recovery_strategy)
         
-        # Simulation state
+        #Simulation state
         self.metrics = SimulationMetrics()
         self.iteration = 0
         self.last_detection_time = 0.0
@@ -83,7 +81,7 @@ class SimulationController:
         self.running = False
     
     def add_process(self, pid: str, priority: int = 5, execution_time: int = 100):
-        """Add a process to the system"""
+        #Add a process to the system
         if pid in self.processes:
             raise ValueError(f"Process {pid} already exists")
         
@@ -93,7 +91,7 @@ class SimulationController:
         return process
     
     def add_resource(self, rid: str, instances: int = 1, resource_type: str = "Generic"):
-        """Add a resource to the system"""
+        #Add a resource to the system
         if rid in self.resources:
             raise ValueError(f"Resource {rid} already exists")
         
@@ -103,7 +101,7 @@ class SimulationController:
         return resource
     
     def request_resource(self, pid: str, rid: str):
-        """Process requests a resource"""
+        #Process requests a resource
         if pid not in self.processes:
             raise ValueError(f"Process {pid} not found")
         if rid not in self.resources:
@@ -112,15 +110,15 @@ class SimulationController:
         process = self.processes[pid]
         resource = self.resources[rid]
         
-        # Process FSA: transition to requesting
+        #Process FSA: transition to requesting
         if process.state == 'Ready':
             process.transition('start')
         
         process.request_resource(rid)
         
-        # Try to allocate
+        #Try to allocate
         if resource.is_available():
-            # Allocation successful
+            #Allocation successful
             resource.allocate(pid)
             process.allocate_resource(rid)
             process.transition('allocate')
@@ -128,19 +126,19 @@ class SimulationController:
             self._log_event(f"Process {pid} allocated resource {rid}")
             logger.info(f"Allocated {rid} to {pid}")
         else:
-            # Block process
+            #Block process
             process.transition('deny')
             resource.add_to_wait_queue(pid)
             
             self._log_event(f"Process {pid} blocked waiting for {rid}")
             logger.info(f"Process {pid} blocked on {rid}")
             
-            # Trigger immediate detection if configured
+            #Trigger immediate detection if configured
             if self.config.detection_strategy == DetectionStrategy.IMMEDIATE.value:
                 self._run_detection()
     
     def release_resource(self, pid: str, rid: str):
-        """Process releases a resource"""
+        #Process releases a resource"""
         if pid not in self.processes:
             raise ValueError(f"Process {pid} not found")
         if rid not in self.resources:
@@ -154,7 +152,7 @@ class SimulationController:
             self._log_event(f"Process {pid} released resource {rid}")
             logger.info(f"Process {pid} released {rid}")
             
-            # Try to unblock waiting processes
+            #Try to unblock waiting processes
             if resource.wait_queue:
                 waiting_pid = resource.wait_queue[0]
                 if waiting_pid in self.processes:
@@ -185,18 +183,18 @@ class SimulationController:
             self.iteration += 1
             current_time = time.time()
             
-            # Check if detection should run
+            #Check if detection should run
             if self._should_run_detection(current_time):
                 self._run_detection()
             
-            # Simulate process execution (simplified)
-            # In a real system, processes would actually execute here
+            #Simulate process execution (simplified)
+            #In a real system, processes would actually execute here
             
             # Small delay for periodic detection
             if self.config.detection_strategy == DetectionStrategy.PERIODIC.value:
                 time.sleep(0.1)  # 100ms
             
-            # Check termination condition
+            #Check termination condition
             if self._all_processes_terminated():
                 self.running = False
                 logger.info("All processes terminated - simulation complete")
@@ -206,18 +204,18 @@ class SimulationController:
         return self._get_final_report()
     
     def _should_run_detection(self, current_time: float) -> bool:
-        """Determine if detection should run"""
+        #Determine if detection should run
         strategy = self.config.detection_strategy
         
         if strategy == DetectionStrategy.IMMEDIATE.value:
-            return False  # Already triggered on block
+            return False  #Already triggered on block
         
         elif strategy == DetectionStrategy.PERIODIC.value:
             elapsed = current_time - self.last_detection_time
             return elapsed >= self.config.detection_interval
         
         elif strategy == DetectionStrategy.CPU_TRIGGERED.value:
-            # Simplified: check if any processes are blocked
+            #Simplified: check if any processes are blocked
             blocked_count = sum(
                 1 for p in self.processes.values() 
                 if p.state in ['Blocked', 'Deadlocked']
@@ -227,7 +225,7 @@ class SimulationController:
         return False
     
     def _run_detection(self):
-        """Run deadlock detection"""
+        #Run deadlock detection
         self.last_detection_time = time.time()
         
         result = self.detector.detect(self.processes, self.resources)
@@ -241,10 +239,10 @@ class SimulationController:
         if result.deadlock_detected:
             self.metrics.deadlocks_found += 1
             
-            # Update system FSA
+            #Update system FSA
             self.system_state.transition('cycle_detected')
             
-            # Update process FSAs
+            #Update process FSAs
             for pid in result.deadlocked_processes:
                 if pid in self.processes:
                     process = self.processes[pid]
@@ -254,12 +252,12 @@ class SimulationController:
             logger.warning(f"DEADLOCK DETECTED: {result.deadlocked_processes}")
             self._log_event(f"Deadlocked processes: {result.deadlocked_processes}")
             
-            # Initiate recovery
+            #Initiate recovery
             self._run_recovery(result.deadlocked_processes)
     
     def _run_recovery(self, deadlocked_pids: set):
-        """Run deadlock recovery"""
-        # Update system FSA
+        #Run deadlock recovery
+        #Update system FSA
         self.system_state.transition('recovery_start')
         
         recovery_result = self.recovery.recover(
@@ -279,20 +277,20 @@ class SimulationController:
             f"Recovery: unblocked {len(recovery_result.unblocked_processes)} process(es)"
         )
         
-        # Update system FSA
+        #Update system FSA
         self.system_state.transition('recovery_complete')
         
         logger.info(f"Recovery complete: {recovery_result.to_dict()}")
     
     def _all_processes_terminated(self) -> bool:
-        """Check if all processes are terminated"""
+        #Check if all processes are terminated
         return all(
             p.state == 'Terminated' 
             for p in self.processes.values()
         )
     
     def _log_event(self, message: str):
-        """Log a simulation event"""
+        #Log a simulation event
         event = {
             'iteration': self.iteration,
             'timestamp': time.time(),
@@ -302,7 +300,7 @@ class SimulationController:
         self.simulation_log.append(event)
     
     def _get_final_report(self) -> dict:
-        """Generate final simulation report"""
+        #Generate final simulation report
         return {
             'summary': {
                 'total_iterations': self.iteration,
@@ -323,7 +321,7 @@ class SimulationController:
         }
     
     def get_current_state(self) -> dict:
-        """Get current system state snapshot"""
+        #Get current system state snapshot
         return {
             'iteration': self.iteration,
             'system_state': self.system_state.state,
@@ -333,7 +331,7 @@ class SimulationController:
         }
     
     def reset(self):
-        """Reset simulation to initial state"""
+        #Reset simulation to initial state
         self.processes.clear()
         self.resources.clear()
         self.system_state.reset()

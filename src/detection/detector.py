@@ -1,6 +1,5 @@
-"""
-Deadlock detection using DFS-based cycle detection
-"""
+#Deadlock detection using DFS-based cycle detection
+
 from typing import Dict, Set, Tuple
 from dataclasses import dataclass
 import time
@@ -12,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class DetectionResult:
-    """Result of deadlock detection"""
+    #Result of deadlock detection
     deadlock_detected: bool
     deadlocked_processes: Set[str]
     wait_for_graph: WaitForGraph
@@ -20,7 +19,7 @@ class DetectionResult:
     detection_latency: float = 0.0
     
     def to_dict(self) -> dict:
-        """Convert to dictionary"""
+        #Convert to dictionary
         return {
             'deadlock_detected': self.deadlock_detected,
             'deadlocked_processes': list(self.deadlocked_processes),
@@ -31,14 +30,14 @@ class DetectionResult:
 
 
 class DeadlockDetector:
-    """Deadlock detector using DFS-based cycle detection algorithm"""
+    #Deadlock detector using DFS-based cycle detection algorithm
     
     def __init__(self):
         self.detection_count = 0
         self.total_detection_time = 0.0
     
     def detect(self, processes: Dict, resources: Dict) -> DetectionResult:
-        """Detect deadlock in the system"""
+        #Detect deadlock in the system
         start_time = time.time()
         self.detection_count += 1
         
@@ -64,13 +63,13 @@ class DeadlockDetector:
         return result
     
     def _detect_cycle_dfs(self, wfg: WaitForGraph) -> Tuple[bool, Set[str]]:
-        """Detect cycle in Wait-For Graph using DFS"""
+        #Detect cycle in Wait-For Graph using DFS
         visited = set()
         recursion_stack = set()
         cycle_processes = set()
         
         def dfs(node: str) -> bool:
-            """DFS recursive helper"""
+            #DFS recursive helper
             visited.add(node)
             recursion_stack.add(node)
             
@@ -96,7 +95,7 @@ class DeadlockDetector:
         return (False, set())
     
     def get_statistics(self) -> dict:
-        """Get detection statistics"""
+        #Get detection statistics
         avg_time = (
             self.total_detection_time / self.detection_count 
             if self.detection_count > 0 else 0

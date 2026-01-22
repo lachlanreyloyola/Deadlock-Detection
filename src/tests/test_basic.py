@@ -1,6 +1,5 @@
-"""
-Basic tests for deadlock detection system
-"""
+#Basic tests for deadlock detection system
+
 import sys
 from pathlib import Path
 
@@ -12,7 +11,7 @@ from src.simulation.controller import SimulationController, SimulationConfig
 
 
 def test_process_creation():
-    """Test process creation and FSA"""
+    #Test process creation and FSA
     process = Process(pid="P1", priority=5)
     assert process.state == 'Ready'
     
@@ -22,7 +21,7 @@ def test_process_creation():
 
 
 def test_resource_creation():
-    """Test resource creation and FSA"""
+    #Test resource creation and FSA
     resource = Resource(rid="R1", total_instances=1)
     assert resource.state == 'Free'
     
@@ -32,7 +31,7 @@ def test_resource_creation():
 
 
 def test_simple_deadlock_detection():
-    """Test detection of simple two-process deadlock"""
+    #Test detection of simple two-process deadlock
     config = SimulationConfig(detection_strategy='immediate')
     controller = SimulationController(config)
     
@@ -54,7 +53,7 @@ def test_simple_deadlock_detection():
 
 
 def test_no_deadlock_scenario():
-    """Test system without deadlock"""
+    #Test system without deadlock
     config = SimulationConfig()
     controller = SimulationController(config)
     
@@ -77,4 +76,4 @@ if __name__ == '__main__':
     test_resource_creation()
     test_simple_deadlock_detection()
     test_no_deadlock_scenario()
-    print("\n✅ All tests passed!")
+    print("\n✓ All tests passed!")

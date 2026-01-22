@@ -1,6 +1,5 @@
-"""
-Command-line interface for deadlock detection system
-"""
+#Command-line interface for deadlock detection system
+
 import sys
 from typing import Optional
 from ..simulation.controller import SimulationController, SimulationConfig
@@ -14,14 +13,14 @@ logger = logging.getLogger(__name__)
 
 
 class CLI:
-    """Interactive command-line interface"""
+    #Interactive command-line interface
     
     def __init__(self):
         self.controller: Optional[SimulationController] = None
         self.config = SimulationConfig()
     
     def run(self):
-        """Main CLI loop"""
+        #Main CLI loop
         print("=" * 60)
         print("DEADLOCK DETECTION AND RECOVERY SYSTEM v1.0")
         print("=" * 60)
@@ -45,10 +44,10 @@ class CLI:
                 print("\nThank you for using Deadlock Detection System!")
                 break
             else:
-                print("\n❌ Invalid choice. Please try again.")
+                print("\n✘ Invalid choice. Please try again.")
     
     def _print_menu(self):
-        """Print main menu"""
+        #Print main menu
         print("\n" + "=" * 60)
         print("MAIN MENU")
         print("=" * 60)
@@ -61,7 +60,7 @@ class CLI:
         print("=" * 60)
     
     def _define_scenario(self):
-        """Interactive scenario definition"""
+        #Interactive scenario definition
         print("\n" + "=" * 60)
         print("DEFINE NEW SCENARIO")
         print("=" * 60)
@@ -103,7 +102,7 @@ class CLI:
                 self.controller.request_resource(pid, rid)
                 print(f"  ✓ Allocated {rid} to {pid}")
             except Exception as e:
-                print(f"  ❌ Error: {e}")
+                print(f"  ✘ Error: {e}")
         
         print("\n--- Define Resource Requests ---")
         while True:
@@ -118,24 +117,24 @@ class CLI:
                 self.controller.request_resource(pid, rid)
                 print(f"  ✓ {pid} requested {rid}")
             except Exception as e:
-                print(f"  ❌ Error: {e}")
+                print(f"  ✘ Error: {e}")
         
-        print("\n✅ Scenario defined successfully!")
+        print("\nV Scenario defined successfully!")
     
     def _load_scenario(self):
-        """Load scenario from file"""
+        #Load scenario from file
         print("\n--- Load Scenario from File ---")
         filename = input("Enter filename (JSON/YAML): ").strip()
         
         try:
             from .config_loader import load_scenario
             self.controller = load_scenario(filename, self.config)
-            print(f"✅ Scenario loaded from {filename}")
+            print(f"✓ Scenario loaded from {filename}")
         except Exception as e:
-            print(f"❌ Error loading scenario: {e}")
+            print(f"✘ Error loading scenario: {e}")
     
     def _configure_detection(self):
-        """Configure detection settings"""
+        #Configure detection settings
         print("\n" + "=" * 60)
         print("DETECTION SETTINGS")
         print("=" * 60)
@@ -163,14 +162,14 @@ class CLI:
         recovery_map = {'1': 'priority', '2': 'cost', '3': 'time', '4': 'resources'}
         self.config.recovery_strategy = recovery_map.get(recovery_choice, 'cost')
         
-        print("\n✅ Configuration updated:")
+        print("\n✓ Configuration updated:")
         print(f"   Detection: {self.config.detection_strategy}")
         print(f"   Recovery: {self.config.recovery_strategy}")
     
     def _run_simulation(self):
-        """Run complete simulation"""
+        #Run complete simulation
         if not self.controller:
-            print("\n❌ Please define or load a scenario first!")
+            print("\n✘ Please define or load a scenario first!")
             return
         
         print("\n" + "=" * 60)
@@ -189,9 +188,9 @@ class CLI:
         self._print_report(report)
     
     def _view_results(self):
-        """View current results"""
+        #View current results
         if not self.controller:
-            print("\n❌ No simulation data available!")
+            print("\n✘ No simulation data available!")
             return
         
         state = self.controller.get_current_state()
@@ -212,7 +211,7 @@ class CLI:
             print(f"  {rid}: {res['state']} (available={res['available_instances']}/{res['total_instances']})")
     
     def _print_report(self, report: dict):
-        """Print simulation report"""
+        #Print simulation report
         summary = report['summary']
         metrics = report['metrics']
         
@@ -226,7 +225,7 @@ class CLI:
             print(f"Avg Recovery Time: {metrics['avg_recovery_time']:.2f}s")
     
     def _get_int_input(self, prompt: str, min_val: int, max_val: int) -> int:
-        """Get validated integer input"""
+        #Get validated integer input
         while True:
             try:
                 value = int(input(prompt))
@@ -237,7 +236,7 @@ class CLI:
                 print("Please enter a valid number")
     
     def _get_float_input(self, prompt: str, min_val: float, max_val: float) -> float:
-        """Get validated float input"""
+        #Get validated float input
         while True:
             try:
                 value = float(input(prompt))
@@ -249,7 +248,7 @@ class CLI:
 
 
 def main():
-    """Entry point for CLI"""
+    #Entry point for CLI
     cli = CLI()
     try:
         cli.run()

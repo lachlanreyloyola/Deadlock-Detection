@@ -1,6 +1,5 @@
-"""
-Unit tests for Finite State Automaton
-"""
+#Unit tests for Finite State Automaton
+
 import sys
 from pathlib import Path
 
@@ -10,7 +9,7 @@ from src.core.fsa import FiniteStateAutomaton, FSAException
 
 
 def test_fsa_creation():
-    """Test FSA creation with valid parameters"""
+    #Test FSA creation with valid parameters
     states = {'S0', 'S1', 'S2'}
     alphabet = {'a', 'b'}
     transitions = {
@@ -33,7 +32,7 @@ def test_fsa_creation():
 
 
 def test_fsa_transitions():
-    """Test FSA state transitions"""
+    #Test FSA state transitions
     states = {'S0', 'S1', 'S2'}
     alphabet = {'a', 'b'}
     transitions = {
@@ -64,7 +63,7 @@ def test_fsa_transitions():
 
 
 def test_fsa_invalid_transition():
-    """Test FSA with invalid transition"""
+    #Test FSA with invalid transition
     states = {'S0', 'S1'}
     alphabet = {'a'}
     transitions = {
@@ -89,7 +88,7 @@ def test_fsa_invalid_transition():
 
 
 def test_fsa_reset():
-    """Test FSA reset functionality"""
+    #Test FSA reset functionality
     states = {'S0', 'S1'}
     alphabet = {'a'}
     transitions = {
@@ -115,7 +114,7 @@ def test_fsa_reset():
 
 
 def test_fsa_accepting_state():
-    """Test FSA accepting state check"""
+    #Test FSA accepting state check
     states = {'S0', 'S1', 'S2'}
     alphabet = {'a', 'b'}
     transitions = {
@@ -150,4 +149,4 @@ if __name__ == '__main__':
     test_fsa_invalid_transition()
     test_fsa_reset()
     test_fsa_accepting_state()
-    print("\n✅ All FSA tests passed!")
+    print("\n✓ All FSA tests passed!")

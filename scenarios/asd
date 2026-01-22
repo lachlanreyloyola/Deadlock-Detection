@@ -1,0 +1,24 @@
+class Coffee {
+    // 1. Symbolic Encapsulation (#)
+    #temperature: int = 90; 
+
+    fn serve() {
+        print("Serving Coffee...");
+    }
+}
+
+class KapengBarako : Coffee {
+    // 2. Explicit Override (!) - Mandatory for derived classes
+    fn !serve() { 
+        print("Serving Strong Coffee!");
+    }
+}
+
+fn main() {
+    // 3. Type Inference
+    let myCup = new KapengBarako(); 
+    
+    // 4. Concise Flow
+    print("Brewing...");
+    myCup.serve();
+}

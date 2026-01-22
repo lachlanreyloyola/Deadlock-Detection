@@ -1,6 +1,4 @@
-"""
-Flask-based REST API for web GUI
-"""
+#Flask-based REST API for web GUI
 
 import os
 import logging
@@ -20,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# -------------------- PATH SETUP (FIXED) --------------------
+# -------------------- PATH SETUP --------------------
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) # src/interfaces
 SRC_DIR = os.path.dirname(CURRENT_DIR) # src
 WEB_DIR = os.path.join(SRC_DIR, "web") # src/web

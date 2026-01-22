@@ -1,6 +1,5 @@
-"""
-Unit tests for deadlock recovery
-"""
+#Unit tests for deadlock recovery
+
 import sys
 from pathlib import Path
 
@@ -10,7 +9,7 @@ from src.simulation.controller import SimulationController, SimulationConfig
 
 
 def test_recovery_with_priority_strategy():
-    """Test recovery using priority-based victim selection"""
+    #Test recovery using priority-based victim selection
     config = SimulationConfig(recovery_strategy='priority')
     controller = SimulationController(config)
     
@@ -44,7 +43,7 @@ def test_recovery_with_priority_strategy():
 
 
 def test_recovery_with_cost_strategy():
-    """Test recovery using cost-based victim selection"""
+    #Test recovery using cost-based victim selection
     config = SimulationConfig(recovery_strategy='cost')
     controller = SimulationController(config)
     
@@ -72,7 +71,7 @@ def test_recovery_with_cost_strategy():
 
 
 def test_resource_release_after_recovery():
-    """Test that resources are released after recovery"""
+    #Test that resources are released after recovery
     config = SimulationConfig(recovery_strategy='cost')
     controller = SimulationController(config)
     
@@ -107,7 +106,7 @@ def test_resource_release_after_recovery():
 
 
 def test_multiple_recoveries():
-    """Test system handling multiple recovery cycles"""
+    #Test system handling multiple recovery cycles
     config = SimulationConfig(recovery_strategy='cost')
     controller = SimulationController(config)
     
@@ -136,7 +135,7 @@ def test_multiple_recoveries():
 
 
 def test_victim_count_tracking():
-    """Test that victim count is tracked for starvation prevention"""
+    #Test that victim count is tracked for starvation prevention
     config = SimulationConfig(recovery_strategy='cost')
     controller = SimulationController(config)
     

@@ -1,6 +1,5 @@
-"""
-Resource class with integrated FSA for state management
-"""
+#Resource class with integrated FSA for state management
+
 from typing import Set
 from dataclasses import dataclass, field
 from collections import deque
@@ -9,7 +8,7 @@ from .fsa import FiniteStateAutomaton
 
 @dataclass
 class Resource:
-    """Represents a system resource"""
+    #Represents a system resource
     rid: str
     total_instances: int = 1
     resource_type: str = "Generic"
@@ -18,7 +17,7 @@ class Resource:
     wait_queue: deque = field(default_factory=deque)
     
     def __post_init__(self):
-        """Initialize Resource FSA"""
+        #Initialize Resource FSA
         self.available_instances = self.total_instances
         
         states = {'Free', 'Allocated'}
@@ -39,15 +38,15 @@ class Resource:
     
     @property
     def state(self) -> str:
-        """Get current state from FSA"""
+        #Get current state from FSA
         return self.fsa.current_state
     
     def is_available(self) -> bool:
-        """Check if resource has available instances"""
+        #Check if resource has available instances
         return self.available_instances > 0
     
     def allocate(self, process_id: str) -> bool:
-        """Allocate resource to process"""
+        #Allocate resource to process
         if not self.is_available():
             return False
         
@@ -60,7 +59,7 @@ class Resource:
         return True
     
     def release(self, process_id: str) -> bool:
-        """Release resource from process"""
+        #Release resource from process
         if process_id not in self.allocated_to:
             return False
         
@@ -73,12 +72,12 @@ class Resource:
         return True
     
     def add_to_wait_queue(self, process_id: str):
-        """Add process to wait queue"""
+        #Add process to wait queue
         if process_id not in self.wait_queue:
             self.wait_queue.append(process_id)
     
     def remove_from_wait_queue(self, process_id: str):
-        """Remove process from wait queue"""
+        #Remove process from wait queue
         if process_id in self.wait_queue:
             self.wait_queue.remove(process_id)
     
@@ -89,7 +88,7 @@ class Resource:
         )
     
     def to_dict(self) -> dict:
-        """Convert to dictionary for serialization"""
+        #Convert to dictionary for serialization
         return {
             'rid': self.rid,
             'state': self.state,

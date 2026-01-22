@@ -1,6 +1,6 @@
-"""
-Deadlock recovery through victim selection and termination
-"""
+
+#Deadlock recovery through victim selection and termination
+
 from typing import Dict, Set, List
 from dataclasses import dataclass
 import time
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class RecoveryResult:
-    """Result of recovery operation"""
+    #Result of recovery operation
     success: bool
     victims: List[str]
     terminated_count: int
@@ -20,7 +20,7 @@ class RecoveryResult:
     unblocked_processes: Set[str]
     
     def to_dict(self) -> dict:
-        """Convert to dictionary"""
+        #Convert to dictionary
         return {
             'success': self.success,
             'victims': self.victims,
@@ -32,11 +32,11 @@ class RecoveryResult:
 
 
 class VictimSelector:
-    """Victim selection strategies"""
+    #Victim selection strategies
     
     @staticmethod
     def select_by_priority(processes: Dict, deadlocked_pids: Set[str]) -> str:
-        """Select victim with lowest priority (highest priority number)"""
+        #Select victim with lowest priority (highest priority number)
         victim = None
         lowest_priority = -1
         
@@ -51,7 +51,7 @@ class VictimSelector:
     
     @staticmethod
     def select_by_cost(processes: Dict, deadlocked_pids: Set[str]) -> str:
-        """Select victim with minimum termination cost"""
+        #Select victim with minimum termination cost
         RESOURCE_WEIGHT = 10
         EXECUTION_WEIGHT = 1
         PROGRESS_WEIGHT = 5
@@ -86,7 +86,7 @@ class VictimSelector:
     
     @staticmethod
     def select_by_time(processes: Dict, deadlocked_pids: Set[str]) -> str:
-        """Select victim with least execution time (newest process)"""
+        #Select victim with least execution time (newest process)
         victim = None
         min_time = float('inf')
         
@@ -102,7 +102,7 @@ class VictimSelector:
     
     @staticmethod
     def select_by_resources(processes: Dict, deadlocked_pids: Set[str]) -> str:
-        """Select victim holding fewest resources"""
+        #Select victim holding fewest resources
         victim = None
         min_resources = float('inf')
         
@@ -118,7 +118,7 @@ class VictimSelector:
 
 
 class RecoveryModule:
-    """Handles deadlock recovery through process termination"""
+    #Handles deadlock recovery through process termination
     
     SELECTION_STRATEGIES = {
         'priority': VictimSelector.select_by_priority,
@@ -128,7 +128,7 @@ class RecoveryModule:
     }
     
     def __init__(self, strategy: str = 'cost'):
-        """Initialize recovery module"""
+        #Initialize recovery module
         if strategy not in self.SELECTION_STRATEGIES:
             raise ValueError(f"Invalid strategy: {strategy}")
         
@@ -142,7 +142,7 @@ class RecoveryModule:
         resources: Dict, 
         deadlocked_pids: Set[str]
     ) -> RecoveryResult:
-        """Recover from deadlock by terminating victim process(es)"""
+        #Recover from deadlock by terminating victim process(es)
         start_time = time.time()
         self.recovery_count += 1
         
@@ -190,7 +190,7 @@ class RecoveryModule:
         return result
     
     def _terminate_victim(self, victim_pid: str, processes: Dict, resources: Dict) -> Set[str]:
-        """Terminate victim process and release its resources"""
+        #Terminate victim process and release its resources
         victim = processes[victim_pid]
         victim.transition('terminate')
         victim.victim_count += 1
@@ -208,11 +208,11 @@ class RecoveryModule:
     
     def _would_break_cycle(self, victim_pid: str, remaining: Set[str], 
                           processes: Dict, resources: Dict) -> bool:
-        """Check if removing victim would break the deadlock cycle"""
+        #Check if removing victim would break the deadlock cycle
         return len(remaining) == 0 or len(remaining) < len(processes) / 2
     
     def _try_allocate_resources(self, process, resources: Dict) -> bool:
-        """Try to allocate requested resources to process"""
+        #Try to allocate requested resources to process
         if not process.requested_resources:
             return True
         
@@ -227,7 +227,7 @@ class RecoveryModule:
         return False
     
     def get_statistics(self) -> dict:
-        """Get recovery statistics"""
+        #Get recovery statistics
         return {
             'recovery_count': self.recovery_count,
             'strategy': self.strategy

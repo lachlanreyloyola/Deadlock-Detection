@@ -1,6 +1,5 @@
-"""
-Base Finite State Automaton implementation
-"""
+#Base Finite State Automaton implementation
+
 from typing import Any, Dict, Optional
 from dataclasses import dataclass
 import logging
@@ -10,13 +9,13 @@ logger = logging.getLogger(__name__)
 
 
 class FSAException(Exception):
-    """Base exception for FSA errors"""
+    #Base exception for FSA errors
     pass
 
 
 @dataclass
 class Transition:
-    """Represents a state transition"""
+    #Represents a state transition
     from_state: str
     to_state: str
     input_symbol: str
@@ -25,10 +24,7 @@ class Transition:
 
 
 class FiniteStateAutomaton:
-    """
-    Generic Finite State Automaton implementation
-    """
-    
+    #Generic Finite State Automaton implementation
     def __init__(
         self,
         name: str,
@@ -49,7 +45,7 @@ class FiniteStateAutomaton:
         self._validate()
     
     def _validate(self):
-        """Validate FSA definition"""
+        #Validate FSA definition
         if self.initial_state not in self.states:
             raise FSAException(f"Initial state {self.initial_state} not in states")
         
@@ -57,7 +53,7 @@ class FiniteStateAutomaton:
             raise FSAException("Accepting states must be subset of states")
     
     def transition(self, input_symbol: str, metadata: Dict[str, Any] = None) -> str:
-        """Execute a state transition"""
+        #Execute a state transition
         if input_symbol not in self.alphabet:
             raise FSAException(f"Invalid input symbol '{input_symbol}' for FSA '{self.name}'")
         
@@ -86,17 +82,17 @@ class FiniteStateAutomaton:
         return next_state
     
     def reset(self):
-        """Reset FSA to initial state"""
+        #Reset FSA to initial state
         self.current_state = self.initial_state
         self.transition_history = []
         logger.info(f"FSA '{self.name}' reset to initial state '{self.initial_state}'")
     
     def is_in_accepting_state(self) -> bool:
-        """Check if current state is an accepting state"""
+        #Check if current state is an accepting state
         return self.current_state in self.accepting_states
     
     def get_transition_history(self) -> list:
-        """Get list of all transitions"""
+        #Get list of all transitions
         return self.transition_history.copy()
     
     def __repr__(self):

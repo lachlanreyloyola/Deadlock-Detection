@@ -1,4 +1,4 @@
-"""Core components"""
+#Core components
 from .process import Process
 from .resource import Resource
 from .fsa import FiniteStateAutomaton

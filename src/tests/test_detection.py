@@ -1,6 +1,5 @@
-"""
-Unit tests for deadlock detection
-"""
+#Unit tests for deadlock detection
+
 import sys
 from pathlib import Path
 
@@ -10,7 +9,7 @@ from src.simulation.controller import SimulationController, SimulationConfig
 
 
 def test_simple_deadlock_detection():
-    """Test detection of simple two-process deadlock"""
+    #Test detection of simple two-process deadlock
     config = SimulationConfig(detection_strategy='immediate')
     controller = SimulationController(config)
     
@@ -38,7 +37,7 @@ def test_simple_deadlock_detection():
 
 
 def test_three_process_deadlock():
-    """Test detection of three-process circular deadlock"""
+    #Test detection of three-process circular deadlock
     config = SimulationConfig()
     controller = SimulationController(config)
     
@@ -49,7 +48,7 @@ def test_three_process_deadlock():
     controller.add_resource("R2", instances=1)
     controller.add_resource("R3", instances=1)
     
-    # Create circular deadlock: P1->R2->P2->R3->P3->R1->P1
+    #Create circular deadlock: P1->R2->P2->R3->P3->R1->P1
     controller.request_resource("P1", "R1")
     controller.request_resource("P2", "R2")
     controller.request_resource("P3", "R3")
@@ -66,7 +65,7 @@ def test_three_process_deadlock():
 
 
 def test_no_deadlock():
-    """Test system without deadlock"""
+    #Test system without deadlock
     config = SimulationConfig()
     controller = SimulationController(config)
     
@@ -86,7 +85,7 @@ def test_no_deadlock():
 
 
 def test_sequential_execution():
-    """Test sequential execution without deadlock"""
+    #Test sequential execution without deadlock
     config = SimulationConfig()
     controller = SimulationController(config)
     
@@ -106,7 +105,7 @@ def test_sequential_execution():
 
 
 def test_wfg_construction():
-    """Test Wait-For Graph construction"""
+    #Test Wait-For Graph construction
     config = SimulationConfig()
     controller = SimulationController(config)
     
@@ -137,4 +136,4 @@ if __name__ == '__main__':
     test_no_deadlock()
     test_sequential_execution()
     test_wfg_construction()
-    print("\n✅ All detection tests passed!")
+    print("\n✓ All detection tests passed!")

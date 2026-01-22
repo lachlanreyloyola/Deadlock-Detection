@@ -1,6 +1,5 @@
-"""
-Wait-For Graph construction and management
-"""
+#Wait-For Graph construction and management
+
 from typing import Dict, List, Set, Tuple
 from dataclasses import dataclass, field
 import logging
@@ -10,19 +9,19 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class WaitForGraph:
-    """Represents a Wait-For Graph for deadlock detection"""
+    #Represents a Wait-For Graph for deadlock detection
     nodes: Set[str] = field(default_factory=set)
     edges: List[Tuple[str, str]] = field(default_factory=list)
     adjacency_list: Dict[str, List[str]] = field(default_factory=dict)
     
     def add_node(self, process_id: str):
-        """Add a process node to the graph"""
+        #Add a process node to the graph
         self.nodes.add(process_id)
         if process_id not in self.adjacency_list:
             self.adjacency_list[process_id] = []
     
     def add_edge(self, from_process: str, to_process: str):
-        """Add a directed edge"""
+        #Add a directed edge
         if from_process not in self.nodes:
             self.add_node(from_process)
         if to_process not in self.nodes:
@@ -34,17 +33,17 @@ class WaitForGraph:
             self.adjacency_list[from_process].append(to_process)
     
     def get_neighbors(self, process_id: str) -> List[str]:
-        """Get all processes that the given process waits for"""
+        #Get all processes that the given process waits for
         return self.adjacency_list.get(process_id, [])
     
     def clear(self):
-        """Clear the graph"""
+        #Clear the graph
         self.nodes.clear()
         self.edges.clear()
         self.adjacency_list.clear()
     
     def to_dict(self) -> dict:
-        """Convert to dictionary for visualization"""
+        #Convert to dictionary for visualization
         return {
             'nodes': list(self.nodes),
             'edges': [{'from': e[0], 'to': e[1]} for e in self.edges]
@@ -55,7 +54,7 @@ class WaitForGraph:
 
 
 def build_wait_for_graph(processes: Dict, resources: Dict) -> WaitForGraph:
-    """Build Wait-For Graph from current system state"""
+    #Build Wait-For Graph from current system state
     wfg = WaitForGraph()
     
     for pid, process in processes.items():

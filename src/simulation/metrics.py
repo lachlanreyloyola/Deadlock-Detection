@@ -1,6 +1,5 @@
-"""
-Performance metrics tracking and analysis
-"""
+#Performance metrics tracking and analysis
+
 from dataclasses import dataclass, field
 from typing import List, Dict
 import time
@@ -8,7 +7,7 @@ import time
 
 @dataclass
 class MetricSnapshot:
-    """Single metric snapshot at a point in time"""
+    #Single metric snapshot at a point in time
     timestamp: float
     iteration: int
     system_state: str
@@ -21,39 +20,39 @@ class MetricSnapshot:
 
 @dataclass
 class PerformanceMetrics:
-    """Comprehensive performance metrics"""
+    #Comprehensive performance metrics
     
-    # Detection metrics
+    #Detection metrics
     total_detections: int = 0
     deadlocks_found: int = 0
     false_positives: int = 0
     detection_times: List[float] = field(default_factory=list)
     
-    # Recovery metrics
+    #Recovery metrics
     total_recoveries: int = 0
     recovery_times: List[float] = field(default_factory=list)
     processes_terminated: int = 0
     
-    # System metrics
+    #System metrics
     total_iterations: int = 0
     simulation_duration: float = 0.0
     snapshots: List[MetricSnapshot] = field(default_factory=list)
     
     def record_detection(self, detection_time: float, deadlock_found: bool):
-        """Record a detection event"""
+        #Record a detection event
         self.total_detections += 1
         self.detection_times.append(detection_time)
         if deadlock_found:
             self.deadlocks_found += 1
     
     def record_recovery(self, recovery_time: float, terminated_count: int):
-        """Record a recovery event"""
+        #Record a recovery event
         self.total_recoveries += 1
         self.recovery_times.append(recovery_time)
         self.processes_terminated += terminated_count
     
     def take_snapshot(self, controller):
-        """Take a snapshot of current system state"""
+        #Take a snapshot of current system state
         snapshot = MetricSnapshot(
             timestamp=time.time(),
             iteration=controller.iteration,
@@ -71,26 +70,26 @@ class PerformanceMetrics:
         self.snapshots.append(snapshot)
     
     def get_average_detection_time(self) -> float:
-        """Get average detection time in milliseconds"""
+        #Get average detection time in milliseconds
         if not self.detection_times:
             return 0.0
         return sum(self.detection_times) / len(self.detection_times)
     
     def get_average_recovery_time(self) -> float:
-        """Get average recovery time in milliseconds"""
+        #Get average recovery time in milliseconds
         if not self.recovery_times:
             return 0.0
         return sum(self.recovery_times) / len(self.recovery_times)
     
     def get_detection_overhead(self) -> float:
-        """Get detection overhead as percentage of total time"""
+        #Get detection overhead as percentage of total time
         if self.simulation_duration == 0:
             return 0.0
         total_detection_time = sum(self.detection_times)
         return (total_detection_time / self.simulation_duration) * 100
     
     def to_dict(self) -> Dict:
-        """Convert metrics to dictionary"""
+        #Convert metrics to dictionary
         return {
             'detection': {
                 'total_detections': self.total_detections,
